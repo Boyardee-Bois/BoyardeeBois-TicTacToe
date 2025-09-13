@@ -9,8 +9,9 @@ Version 1.0
 */
 
 #include <iostream>
+using namespace std;
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    std::cout << "Hello Tic Tac Toe\n";
 }
