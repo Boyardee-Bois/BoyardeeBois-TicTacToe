@@ -5,7 +5,7 @@ Authors: Joshua Klenk, Joshua Lynch, Erwin Jonson,
 		 Damian Mercedes, Daniel Brooksbank
 
 Date: 9.12.25
-Version 2.0
+Version 2.1
 */
 
 #include <iostream>
@@ -104,11 +104,7 @@ bool getPlayerMove(char currentPlayer)
 		return true;
 	}
 
-
-
 }
-
-
 
 
 int main()
@@ -118,11 +114,14 @@ int main()
 	do
 	{
 		system("cls");
+
 		cout << "\n##### Welcome to Boyardee Bois' Tic Tac Toe! ######\n\n" << endl;
 
 		// Resets board at the start of each game
 		char blankSpace = ' ';
-		for (int i = 0; i < 3; i++) {
+
+		for (int i = 0; i < 3; i++) 
+		{
 			for (int j = 0; j < 3; j++)
 			{
 				board[i][j] = blankSpace;
@@ -131,9 +130,10 @@ int main()
 
 		char player1, player2;
 
-
 		cout << "Player 1, choose your marker (X/O): ";
+
 		cin >> player1;
+
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
 		while (player1 != 'X' && player1 != 'x' && player1 != 'O' && player1 != 'o')
@@ -166,36 +166,27 @@ int main()
 
 		}
 
+		char players[3];
+		players[1] = player1;
+		players[2] = player2;
 
-
+		int currentPlayerNum = 1;
 
 		// Main game loop (max 9 turns)
 		for (int turn = 0; turn < 9; turn++)
 		{
 			TicTacToeBoard();
-			cout << endl << endl;
+			cout << "\n\n";
 
+			char currentPlayer = players[currentPlayerNum];
 
-			char currentPlayer{};
-			int currentPlayerNum{};
-			cout << "Player " << currentPlayer + 1 << ", enter your choice (1-9): ";
+			cout << "Player " << currentPlayerNum << " (" << currentPlayer <<
+				"), enter your choice (1-9): ";
 
-
-			if (turn % 2 == 0)
+			while (!getPlayerMove(currentPlayer))
 			{
-				currentPlayer = player1;
-				currentPlayerNum = 1;
-			}
-			else
-			{
-				currentPlayer = player2;
-				currentPlayerNum = 2;
-			}
-
-			bool validMove = false;
-			while (!validMove)
-			{
-				validMove = getPlayerMove(currentPlayer);
+				cout << "Player " << currentPlayerNum << " (" << currentPlayer
+					<< "), try again: ";
 			}
 
 			// Check for a winner
@@ -206,6 +197,8 @@ int main()
 				cout << "Player " << currentPlayerNum << " (" << winner << ") wins!\n";
 				break;
 			}
+
+			currentPlayerNum = 3 - currentPlayerNum;
 
 			// Draw if all 9 turns are used
 			if (turn == 8) {
