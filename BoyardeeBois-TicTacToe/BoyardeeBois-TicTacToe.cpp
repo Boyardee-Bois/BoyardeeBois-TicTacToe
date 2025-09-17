@@ -5,7 +5,7 @@ Authors: Joshua Klenk, Joshua Lynch, Erwin Jonson,
 		 Damian Mercedes, Daniel Brooksbank
 
 Date: 9.12.25
-Version 2.1
+Version 2.2
 */
 
 #include <iostream>
@@ -65,42 +65,72 @@ char checkWinner3by3(char board[][3])
 bool getPlayerMove(char currentPlayer)
 {
 	int choice;
+
 	while (true)
 	{
-
 		// Handles invalid input 
 		if (!(cin >> choice))
 		{
 
 			cin.clear();
+
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
 			cout << endl;
+
 			TicTacToeBoard();
+
 			cout << "Invalid input. Please enter a number between 1 and 9.\n" << endl;
 
 			continue;
 		}
 
-		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		int next = cin.peek();
+
+		//Skip spaces & tabs
+		while (next == ' ' || next == '\t')
+		{
+			cin.get();
+			next = cin.peek();
+		}
+
+		//Re-prompt
+		if (next != '\n' && next != '\r' && next != EOF)
+		{
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+			cout << "Invalid input. Please enter a number (1-9): \n";
+
+			TicTacToeBoard();
+
+			continue;
+		}
 
 		if ((choice < 1 || choice > 9))
 		{
-
 			cout << endl;
+
 			TicTacToeBoard();
+
 			cout << "Invalid input. Please enter a number between 1 and 9.\n" << endl;
+
 			continue;
 		}
+
 		int row = (choice - 1) / 3;
 		int col = (choice - 1) % 3;
 
 		if (board[row][col] == 'X' || board[row][col] == 'O' || board[row][col] == 'x' || board[row][col] == 'o')
 		{
 			cout << "This space is taken, Choose another!" << endl;
+
 			TicTacToeBoard();
+
 			continue;
 		}
+
 		board[(choice - 1) / 3][(choice - 1) % 3] = currentPlayer;
+
 		return true;
 	}
 
@@ -149,6 +179,7 @@ int main()
 				cin.ignore(numeric_limits<streamsize>::max(), '\n');
 				continue;
 			}
+
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		}
 
