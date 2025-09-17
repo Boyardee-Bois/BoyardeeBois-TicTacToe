@@ -10,6 +10,7 @@ Version 2.2
 
 #include <iostream>
 #include <limits>
+#include <cstdio>
 using namespace std;
 
 // making the board into a 2D array with a grid style to replace digits easily -JoshL
@@ -19,6 +20,21 @@ char board[3][3] =
 	{' ', ' ', ' '},
 	{' ', ' ', ' '}
 };
+
+void PrintInstructions()
+{
+	cout << "\nHow to play:\n"
+		<< "- Enter a single number (1 - 9) to place your mark.\n"
+		<< "- Only ONE value per line is allowed (ie. `5`).\n"
+		<< "- Type 'h' to see these instructions again.\n"
+		<< "\nBoard mapping:\n"
+		<< " 1 | 2 | 3 \n"
+		<< "---+---+---\n"
+		<< " 4 | 5 | 6 \n"
+		<< "---+---+---\n"
+		<< " 7 | 8 | 9 \n\n"
+		<< "######################################################\n";
+}
 
 void TicTacToeBoard() //Had to remove a lot of the #'s because it made screen cluttered
 {
@@ -30,8 +46,6 @@ void TicTacToeBoard() //Had to remove a lot of the #'s because it made screen cl
 		<< " \n"
 		<< " \n";
 	cout << "#########################################################" << endl;
-
-
 }
 
 char checkWinner3by3(char board[][3])
@@ -53,7 +67,6 @@ char checkWinner3by3(char board[][3])
 		return board[0][0];
 	}
 
-
 	if (board[0][2] == board[1][1] && board[1][1] == board[2][0])
 	{
 		return board[0][2];
@@ -68,6 +81,27 @@ bool getPlayerMove(char currentPlayer)
 
 	while (true)
 	{
+		cin >> ws;
+
+		int next = cin.peek();
+
+		//Skip spaces & tabs
+		while (next == ' ' || next == '\t') { cin.get(); next = cin.peek(); }
+
+		//Check if h for help was entered
+		if (next == 'h' || next == 'H')
+		{
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+			PrintInstructions();
+
+			TicTacToeBoard();
+
+			cout << "Enter your choice (1-9) or 'h' for help: ";
+
+			continue;
+		}
+
 		// Handles invalid input 
 		if (!(cin >> choice))
 		{
@@ -80,26 +114,22 @@ bool getPlayerMove(char currentPlayer)
 
 			TicTacToeBoard();
 
-			cout << "Invalid input. Please enter a number between 1 and 9.\n" << endl;
+			cout << "Invalid input. Enter your choice (1-9) or 'h' for help: \n" << endl;
 
 			continue;
 		}
 
-		int next = cin.peek();
+		next = cin.peek();
 
 		//Skip spaces & tabs
-		while (next == ' ' || next == '\t')
-		{
-			cin.get();
-			next = cin.peek();
-		}
+		while (next == ' ' || next == '\t'){cin.get(); next = cin.peek();}
 
 		//Re-prompt
 		if (next != '\n' && next != '\r' && next != EOF)
 		{
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-			cout << "Invalid input. Please enter a number (1-9): \n";
+			cout << "Invalid input. Enter your choice (1-9) or 'h' for help: \n";
 
 			TicTacToeBoard();
 
@@ -112,7 +142,7 @@ bool getPlayerMove(char currentPlayer)
 
 			TicTacToeBoard();
 
-			cout << "Invalid input. Please enter a number between 1 and 9.\n" << endl;
+			cout << "Invalid input. Enter your choice (1-9) or 'h' for help: \n" << endl;
 
 			continue;
 		}
@@ -122,7 +152,7 @@ bool getPlayerMove(char currentPlayer)
 
 		if (board[row][col] == 'X' || board[row][col] == 'O' || board[row][col] == 'x' || board[row][col] == 'o')
 		{
-			cout << "This space is taken, Choose another!" << endl;
+			cout << "This space is taken! Choose another or 'h' for help: " << endl;
 
 			TicTacToeBoard();
 
@@ -133,14 +163,12 @@ bool getPlayerMove(char currentPlayer)
 
 		return true;
 	}
-
 }
-
 
 int main()
 {
-
 	char answer;
+
 	do
 	{
 		system("cls");
@@ -150,7 +178,7 @@ int main()
 		// Resets board at the start of each game
 		char blankSpace = ' ';
 
-		for (int i = 0; i < 3; i++) 
+		for (int i = 0; i < 3; i++)
 		{
 			for (int j = 0; j < 3; j++)
 			{
@@ -172,7 +200,6 @@ int main()
 
 			cout << "Player 1, choose your marker (X/O): " << endl;
 
-
 			if (!(cin >> player1))
 			{
 				cin.clear();
@@ -182,7 +209,6 @@ int main()
 
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		}
-
 
 		if (player1 == 'X' || player1 == 'x')
 		{
@@ -207,21 +233,23 @@ int main()
 		for (int turn = 0; turn < 9; turn++)
 		{
 			TicTacToeBoard();
+
 			cout << "\n\n";
 
 			char currentPlayer = players[currentPlayerNum];
 
-			cout << "Player " << currentPlayerNum << " (" << currentPlayer <<
-				"), enter your choice (1-9): ";
+			cout << "Player " << currentPlayerNum << " (" << currentPlayer 
+				 <<"), enter your choice (1-9) or 'h' for help: ";
 
 			while (!getPlayerMove(currentPlayer))
 			{
 				cout << "Player " << currentPlayerNum << " (" << currentPlayer
-					<< "), try again: ";
+					 << "), try again: ";
 			}
 
 			// Check for a winner
 			char winner = checkWinner3by3(board);
+
 			if (winner == 'X' || winner == 'O')
 			{
 				TicTacToeBoard();
@@ -246,7 +274,6 @@ int main()
 			cout << "Invalid input" << endl;
 			cout << "Do you want to play again? (Y/N): " << endl;
 			cin >> answer;
-
 		}
 
 	} while (answer == 'Y' || answer == 'y');
