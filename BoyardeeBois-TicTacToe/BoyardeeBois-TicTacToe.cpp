@@ -11,6 +11,8 @@ Version 2.2
 #include <iostream>
 #include <limits>
 #include <cstdio>
+#include <string>
+
 using namespace std;
 
 // making the board into a 2D array with a grid style to replace digits easily -JoshL
@@ -122,7 +124,7 @@ bool getPlayerMove(char currentPlayer)
 		next = cin.peek();
 
 		//Skip spaces & tabs
-		while (next == ' ' || next == '\t'){cin.get(); next = cin.peek();}
+		while (next == ' ' || next == '\t') { cin.get(); next = cin.peek(); }
 
 		//Re-prompt
 		if (next != '\n' && next != '\r' && next != EOF)
@@ -165,10 +167,70 @@ bool getPlayerMove(char currentPlayer)
 	}
 }
 
+/*
+* @brief Prompts the user to play again and validates their input.
+* 
+* This function displays a play again prompt and reads a single line of
+* user input. It handles various forms of invalid input such as a single
+* character, multiple characters, an empty line, or the End of File signal (Ctr+Z).
+* The function continuously loops until a valid 'Y' or 'N' response is received.
+*
+* @param None.
+* @return Returns true if the user chooses to play again ('Y' or 'y').
+* @return Returns false if the user chooses not to play again ('N' or 'n').
+*/
+bool playAgainPrompt()
+{
+	while (true)
+	{
+		cout << "\nDo you want to play again? (Y/N): ";
+
+		string response;
+
+		getline(cin >> ws, response);
+
+		if (cin.eof())
+		{
+			cin.clear();
+
+			cout << "\nInvalid input. Please enter Y or N.\n";
+
+			continue;
+		}
+
+		if (cin.fail())
+		{
+			cin.clear();
+
+			cout << "\nInvalid input. Please enter Y or N.\n";
+
+			continue;
+		}
+
+		if (response.length() == 1)
+		{
+			char choice = response[0];
+
+			if (choice == 'Y' || choice == 'y')
+			{
+				return true;
+			}
+
+			if (choice == 'N' || choice == 'n')
+			{
+				cout << "\nGood-Bye!\n";
+
+				return false;
+			}
+		}
+
+		cout << "\nInvalid input. Please enter Y or N.\n";
+	}
+}
+
+
 int main()
 {
-	char answer;
-
 	do
 	{
 		system("cls");
@@ -238,13 +300,13 @@ int main()
 
 			char currentPlayer = players[currentPlayerNum];
 
-			cout << "Player " << currentPlayerNum << " (" << currentPlayer 
-				 <<"), enter your choice (1-9) or 'h' for help: ";
+			cout << "Player " << currentPlayerNum << " (" << currentPlayer
+				<< "), enter your choice (1-9) or 'h' for help: ";
 
 			while (!getPlayerMove(currentPlayer))
 			{
 				cout << "Player " << currentPlayerNum << " (" << currentPlayer
-					 << "), try again: ";
+					<< "), try again: ";
 			}
 
 			// Check for a winner
@@ -266,17 +328,7 @@ int main()
 			}
 		}
 
-		cout << "Do you want to play again? (Y/N): ";
-		cin >> answer;
-
-		while (answer != 'Y' && answer != 'y' && answer != 'n' && answer != 'N')
-		{
-			cout << "Invalid input" << endl;
-			cout << "Do you want to play again? (Y/N): " << endl;
-			cin >> answer;
-		}
-
-	} while (answer == 'Y' || answer == 'y');
+	} while (playAgainPrompt());
 
 	return 0;
 }
